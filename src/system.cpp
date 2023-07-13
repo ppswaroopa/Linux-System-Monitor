@@ -24,11 +24,8 @@ Processor& System::Cpu() { return cpu_; }
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() { 
     vector<int> pid = LinuxParser::Pids();
-    vector<string> process_details;
-    Process process = {};
-    string line;
-    string key;
-    string value;
+    // vector<Process> pid_set;
+    // Process process = {};
     for (auto i : pid){
         Process process;
         process.SetPid_(pid[i]);
