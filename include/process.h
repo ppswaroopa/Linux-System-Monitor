@@ -27,7 +27,7 @@ class Process {
  string uid;
  string user;
  long uptime;
-
+ float cpu_util_;
  
 };
 

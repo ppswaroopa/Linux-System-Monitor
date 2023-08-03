@@ -167,7 +167,7 @@ string LinuxParser::Command(int pid) {
   string line;
   string key;
   string value;
-  std::ifstream filestream(kProcDirectory + "/" + to_string(pid) + kCmdlineFilename);
+  std::ifstream filestream(kProcDirectory + to_string(pid) + kCmdlineFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
@@ -183,12 +183,14 @@ string LinuxParser::Ram(int pid) {
   string line;
   string key;
   string value;
-  std::ifstream filestream(kProcDirectory + "/" + to_string(pid) + kStatusFilename);
+  std::ifstream filestream(kProcDirectory + to_string(pid) + kStatusFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
         if (key == "VmSize:") {
+          int val = stoi(value);
+          value = std::to_string(val / 1000);
           return value;
         }
         }
@@ -202,7 +204,7 @@ string LinuxParser::Uid(int pid) {
   string line;
   string key;
   string value;
-  std::ifstream filestream(kProcDirectory + "/" + to_string(pid) + kStatusFilename);
+  std::ifstream filestream(kProcDirectory + to_string(pid) + kStatusFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
@@ -244,7 +246,7 @@ long LinuxParser::UpTime(int pid) {
   string line;
   string key;
   string value;
-  std::ifstream filestream(kProcDirectory + "/" + to_string(pid) + kStatFilename);
+  std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
   if (filestream.is_open()) {
     std::getline(filestream, line);
     std::istringstream linestream(line);

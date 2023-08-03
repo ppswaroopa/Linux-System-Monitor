@@ -28,9 +28,12 @@ vector<Process>& System::Processes() {
     // Process process = {};
     for (auto i : pid){
         Process process;
-        process.SetPid_(pid[i]);
+        process.SetPid_(i);
+        process.CpuUtilization();
         processes_.push_back(process);
     }    
+
+    std::sort(processes_.begin(),processes_.end());
     return processes_; 
 }
 
