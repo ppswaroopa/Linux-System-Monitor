@@ -26,14 +26,6 @@ float Process::CpuUtilization() {
         std::istringstream linestream(line);
         linestream >> pid >> comm >> state >> ppid >> pgrp >> session >> tty_nr >> tgpid >> flags >> minflt >> cminflt >> majflt >> cmajflt >> utime >> stime >> cutime >> cstime >> priority >> nice >>num_threads >> iteralvalue >> starttime;
     }
-
-    // idle = idle + iowait;
-    // long long int nonidle = user + nice + system + irq + softirq + steal;
-    // long long int totaltime = idle + nonidle;
-
-    // float hold =  (totaltime - idle);
-
-    // float percentage = hold / totaltime;
     long long total_time, uptime, Hertz, second;
 
     total_time = utime + stime;
@@ -48,7 +40,6 @@ float Process::CpuUtilization() {
     else {
         percentage = 100 * ((total_time / Hertz) / second);
     }
-    
 
     cpu_util_ = percentage;
     return percentage; 
