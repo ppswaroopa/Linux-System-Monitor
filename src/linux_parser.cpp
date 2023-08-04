@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
+#include <iostream>
 #include "linux_parser.h"
 
 using std::stof;
@@ -73,7 +73,7 @@ float LinuxParser::MemoryUtilization() {
   
   string line;
   string key;
-  string value;
+  int value;
   string kB;
   std::ifstream filestream(kProcDirectory + kMeminfoFilename);
   if (filestream.is_open()) {
@@ -81,11 +81,11 @@ float LinuxParser::MemoryUtilization() {
       std::istringstream linestream(line);
       while (linestream >> key >> value >> kB) {
         if (key == "MemTotal:") {
-          mem_tot = stoi(value);
+          mem_tot = value;
           // return value;
         }
         if (key == "MemAvailable:") {
-          mem_free = stoi(value);
+          mem_free = value;
           // return value;
         }
       }
@@ -128,14 +128,14 @@ long LinuxParser::UpTime() {
 int LinuxParser::TotalProcesses() {
   string line;
   string key;
-  string value;
+  int value;
   std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
         if (key == "processes") {
-          return stoi(value);
+          return value;
         }
         }
       }
@@ -147,14 +147,14 @@ int LinuxParser::TotalProcesses() {
 int LinuxParser::RunningProcesses() {
   string line;
   string key;
-  string value;
+  int value;
   std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
         if (key == "procs_running") {
-          return stoi(value);
+          return value;
         }
         }
       }
@@ -223,8 +223,19 @@ string LinuxParser::User(int pid) {
   string line;
   string username;
   string value;
-  int uid;
+  int userid, uid;
   std::ifstream filestream(kPasswordPath);
+  // string x = Uid(pid);
+  try
+  {
+    userid = stoi(Uid(pid));
+  } catch (const std::invalid_argument& e) {
+    // std::cerr << "Invalid argument: " << e.what() << std::endl;
+  } catch (const std::out_of_range& e)
+  {
+    std::cerr << "Out of range: " << e.what() << std::endl;
+  }
+  
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
@@ -232,7 +243,7 @@ string LinuxParser::User(int pid) {
       std::replace(line.begin(), line.end(), '"', ' ');
       std::istringstream linestream(line);
       while (linestream >> username >> value >> uid) {
-        if (uid == stoi(Uid(pid))) {
+        if (uid == userid) {
           return username;
         }
       }

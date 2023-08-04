@@ -21,9 +21,9 @@ class Process {
 
  private:
     int pid_;
-    string ram_;
+    string mem_util_;
     string command_;
-    string uid;
+    string uid_;
     string user;
     long uptime;
     float cpu_util_;

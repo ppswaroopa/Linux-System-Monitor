@@ -20,7 +20,7 @@ float Process::CpuUtilization() {
     string key;
     string comm, state;
     long long int pid,ppid,pgrp,session,tty_nr,tgpid,flags,minflt,cminflt,majflt,cmajflt,utime,stime,cutime,cstime,priority,nice,num_threads,iteralvalue,starttime;
-    std::ifstream filestream(LinuxParser::kProcDirectory +'/' + to_string(pid_) +LinuxParser::kStatFilename);
+    std::ifstream filestream(LinuxParser::kProcDirectory + to_string(pid_) +LinuxParser::kStatFilename);
     if (filestream.is_open()) {
         std::getline(filestream, line);
         std::istringstream linestream(line);
@@ -38,7 +38,7 @@ float Process::CpuUtilization() {
         percentage = 0;
     }
     else {
-        percentage = 100 * ((total_time / Hertz) / second);
+        percentage = ((total_time / Hertz) / second);
     }
 
     cpu_util_ = percentage;
@@ -52,7 +52,10 @@ string Process::Command() {
 }
 
 // Return this process's memory utilization
-string Process::Ram() { return LinuxParser::Ram(pid_); }
+string Process::Ram() { 
+    mem_util_ =  LinuxParser::Ram(pid_); 
+    return mem_util_;
+}
 
 // Return the user (name) that generated this process
 string Process::User() { return LinuxParser::User(pid_); }
@@ -63,7 +66,7 @@ long int Process::UpTime() { return LinuxParser::UpTime(pid_);
 
 // Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const { 
-    return cpu_util_ < a.cpu_util_; 
+    return cpu_util_ > a.cpu_util_; 
 }
 
 void Process::SetPid_(int t){

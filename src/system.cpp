@@ -29,7 +29,6 @@ vector<Process>& System::Processes() {
         process.CpuUtilization();
         processes_.push_back(process);
     }    
-
     std::sort(processes_.begin(),processes_.end());
     return processes_; 
 }
